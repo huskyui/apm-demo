@@ -1,4 +1,4 @@
-package org.example;
+package org.huskyui;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,6 +9,9 @@ public class App {
     public static void main(String[] args) {
         App app = new App();
         app.say("hhhh!");
+
+        App2 app2 = new App2();
+        app2.sayHello();
     }
 
     private String say(String msg) {

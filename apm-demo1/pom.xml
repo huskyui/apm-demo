@@ -52,7 +52,7 @@
             </manifest>
             <manifestEntries>
               <!--指定premain方法所在的类-->
-              <Premain-Class>org.example.PreMainAgent</Premain-Class>
+              <Premain-Class>org.huskyui.AgentMain</Premain-Class>
               <Can-Redefine-Classes>true</Can-Redefine-Classes>
               <Can-Retransform-Classes>true</Can-Retransform-Classes>
             </manifestEntries>

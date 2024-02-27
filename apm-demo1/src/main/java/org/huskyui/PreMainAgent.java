@@ -1,4 +1,4 @@
-package org.example;
+package org.huskyui;
 
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.description.method.MethodDescription;
