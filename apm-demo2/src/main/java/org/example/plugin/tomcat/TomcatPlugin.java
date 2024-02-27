@@ -1,5 +1,6 @@
 package org.example.plugin.tomcat;
 
+import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
@@ -8,7 +9,12 @@ import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.implementation.bind.annotation.SuperCall;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
+import org.apache.coyote.Request;
+import org.apache.coyote.Response;
 import org.example.InterceptorPoint;
+import org.example.constant.HttpHeaderConstant;
+import org.example.trace.IDGen;
+import org.example.trace.TraceContext;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -34,17 +40,23 @@ public class TomcatPlugin implements InterceptorPoint {
     }
 
     public static class TomcatPluginAdvice{
-        @RuntimeType
-        public static Object intercept(
-                @Origin Method method, @AllArguments Object[] args,
-                @SuperCall Callable<?> callable)
-                throws Exception {
-            try {
-                //执行原方法
-                return callable.call();
-            } finally {
-
+        @Advice.OnMethodEnter(suppress = Throwable.class)
+        public static void onEnter(
+                @Advice.Argument(0) Request request,
+                @Advice.Argument(1) Response response){
+            String traceId = request.getHeader(HttpHeaderConstant.APM_TRACE_ID);
+            boolean existsTraceId = traceId != null && !traceId.isEmpty();
+            if (existsTraceId){
+                TraceContext.setTraceId(traceId);
+            }else{
+                TraceContext.setTraceId(String.valueOf(IDGen.newSpanId()));
             }
         }
+
+        @Advice.OnMethodExit(onThrowable = Throwable.class, suppress = Throwable.class)
+        public static void stopSpan(){
+            TraceContext.remove();
+        }
+
     }
 }

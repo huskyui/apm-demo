@@ -30,7 +30,6 @@ public class AgentMain {
             agentBuilder = agentBuilder
                     .type(point.buildTypeMatcher())
                     .transform(transformer);
-            System.out.println("pointer");
         }
 
         //监听

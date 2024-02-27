@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.plugin.custom.CustomerPlugin;
+import org.example.plugin.tomcat.TomcatPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class PluginGroup {
 
     static{
         POINT_LIST.add(new CustomerPlugin());
+        POINT_LIST.add(new TomcatPlugin());
     }
 
 
