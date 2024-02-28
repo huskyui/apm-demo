@@ -13,14 +13,13 @@ import org.example.InterceptorPoint;
 public class CustomerPlugin implements InterceptorPoint {
     @Override
     public ElementMatcher<TypeDescription> buildTypeMatcher() {
-        return ElementMatchers.named("org.huskyui.App");
+        return ElementMatchers.named("com.example.webtest.Api");
     }
 
     @Override
     public ElementMatcher<MethodDescription> buildMethodMatcher() {
         return ElementMatchers.isMethod()
-                .and(ElementMatchers.any())
-                .and(ElementMatchers.not(ElementMatchers.nameStartsWith("main")));
+                .and((ElementMatchers.named("hello")));
     }
 
     @Override

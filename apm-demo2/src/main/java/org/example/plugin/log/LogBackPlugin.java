@@ -27,7 +27,7 @@ public class LogBackPlugin implements InterceptorPoint {
 
     @Override
     public Class<?> adviceClass() {
-        return null;
+        return LogBackPlugin.class;
     }
 
     public static class LogBackPluginAdvice{

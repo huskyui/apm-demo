@@ -3,10 +3,6 @@ package org.example.plugin.tomcat;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
-import net.bytebuddy.implementation.bind.annotation.AllArguments;
-import net.bytebuddy.implementation.bind.annotation.Origin;
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
-import net.bytebuddy.implementation.bind.annotation.SuperCall;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.coyote.Request;
@@ -16,22 +12,18 @@ import org.example.constant.HttpHeaderConstant;
 import org.example.trace.IDGen;
 import org.example.trace.TraceContext;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.concurrent.Callable;
-
 /**
  * @author 王鹏
  */
 public class TomcatPlugin implements InterceptorPoint {
     @Override
     public ElementMatcher<TypeDescription> buildTypeMatcher() {
-        return ElementMatchers.named("org.apache.catalina.core.StandardHostValve");
+        return ElementMatchers.named("org.apache.catalina.connector.CoyoteAdapter");
     }
 
     @Override
     public ElementMatcher<MethodDescription> buildMethodMatcher() {
-        return ElementMatchers.named("invoke");
+        return ElementMatchers.named("service");
     }
 
     @Override
@@ -44,6 +36,7 @@ public class TomcatPlugin implements InterceptorPoint {
         public static void onEnter(
                 @Advice.Argument(0) Request request,
                 @Advice.Argument(1) Response response){
+            System.out.println("tomcatAdvice enter");
             String traceId = request.getHeader(HttpHeaderConstant.APM_TRACE_ID);
             boolean existsTraceId = traceId != null && !traceId.isEmpty();
             if (existsTraceId){
@@ -51,6 +44,7 @@ public class TomcatPlugin implements InterceptorPoint {
             }else{
                 TraceContext.setTraceId(String.valueOf(IDGen.newSpanId()));
             }
+            System.out.println("traceId:"+TraceContext.getTraceId());
         }
 
         @Advice.OnMethodExit(onThrowable = Throwable.class, suppress = Throwable.class)
