@@ -27,7 +27,7 @@ public class LogBackPlugin implements InterceptorPoint {
 
     @Override
     public Class<?> adviceClass() {
-        return LogBackPlugin.class;
+        return LogBackPluginAdvice.class;
     }
 
     public static class LogBackPluginAdvice{
@@ -39,7 +39,7 @@ public class LogBackPlugin implements InterceptorPoint {
             if (traceId == null || traceId.isEmpty()){
                 return;
             }
-            MDC.put("apmTrace",traceId);
+            MDC.put("apmTrace","traceId:"+traceId);
         }
 
         @Advice.OnMethodExit(onThrowable = Throwable.class, suppress = Throwable.class)

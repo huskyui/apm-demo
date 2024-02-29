@@ -36,7 +36,6 @@ public class TomcatPlugin implements InterceptorPoint {
         public static void onEnter(
                 @Advice.Argument(0) Request request,
                 @Advice.Argument(1) Response response){
-            System.out.println("tomcatAdvice enter");
             String traceId = request.getHeader(HttpHeaderConstant.APM_TRACE_ID);
             boolean existsTraceId = traceId != null && !traceId.isEmpty();
             if (existsTraceId){
@@ -44,7 +43,6 @@ public class TomcatPlugin implements InterceptorPoint {
             }else{
                 TraceContext.setTraceId(String.valueOf(IDGen.newSpanId()));
             }
-            System.out.println("traceId:"+TraceContext.getTraceId());
         }
 
         @Advice.OnMethodExit(onThrowable = Throwable.class, suppress = Throwable.class)
